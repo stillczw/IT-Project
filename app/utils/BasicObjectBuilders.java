@@ -41,7 +41,6 @@ public class BasicObjectBuilders {
 			return card;
 		} catch (Exception e) {
 			e.printStackTrace();
-			
 		}
 		return null;
 	}
@@ -71,11 +70,12 @@ public class BasicObjectBuilders {
 	 * @param configFile
 	 * @return
 	 */
-	public static Unit loadUnit(String configFile, int id,  Class<? extends Unit> classType) {
+	public static Unit loadUnit(String configFile, int id,int playId,  Class<? extends Unit> classType) {
 		
 		try {
 			Unit unit = mapper.readValue(new File(configFile), classType);
 			unit.setId(id);
+			unit.setPlayId(playId);
 			return unit;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -83,6 +83,20 @@ public class BasicObjectBuilders {
 		}
 		return null;
 		
+	}
+	public static Unit loadUnit(String configFile, int id,  Class<? extends Unit> classType) {
+
+		try {
+			Unit unit = mapper.readValue(new File(configFile), classType);
+			unit.setId(id);
+
+			return unit;
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+		return null;
+
 	}
 	
 	/**

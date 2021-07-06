@@ -40,6 +40,9 @@ public class Card {
 	public String getCardname() {
 		return cardname;
 	}
+	public String getFormatName(){
+		return cardname.toLowerCase().replace(" ", "_");
+	}
 	public void setCardname(String cardname) {
 		this.cardname = cardname;
 	}

@@ -1,5 +1,10 @@
 package utils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * This is a utility class that just has short-cuts to the location of various
  * config files. 
@@ -32,6 +37,53 @@ public class StaticConfFiles {
 	public final static String c_pureblade_enforcer = "conf/gameconfs/cards/1_c_u_pureblade_enforcer.json";
 	public final static String c_silverguard_knight = "conf/gameconfs/cards/1_c_u_silverguard_knight.json";
 
+	public final static List<String> deck1Cards = new ArrayList<>(Arrays.asList(
+			StaticConfFiles.c_azure_herald,
+			StaticConfFiles.c_azurite_lion,
+			StaticConfFiles.c_sundrop_elixir,
+			StaticConfFiles.c_truestrike,
+			StaticConfFiles.c_comodo_charger,
+			StaticConfFiles.c_fire_spitter,
+			StaticConfFiles.c_hailstone_golem,
+			StaticConfFiles.c_ironcliff_guardian,
+			StaticConfFiles.c_pureblade_enforcer,
+			StaticConfFiles.c_silverguard_knight,
+			StaticConfFiles.c_azure_herald,
+			StaticConfFiles.c_azurite_lion,
+			StaticConfFiles.c_sundrop_elixir,
+			StaticConfFiles.c_truestrike,
+			StaticConfFiles.c_comodo_charger,
+			StaticConfFiles.c_fire_spitter,
+			StaticConfFiles.c_hailstone_golem,
+			StaticConfFiles.c_ironcliff_guardian,
+			StaticConfFiles.c_pureblade_enforcer,
+			StaticConfFiles.c_silverguard_knight
+	));
+	public final static List<String> deck2Cards = new ArrayList<>(Arrays.asList(
+			StaticConfFiles.c_blaze_hound,
+			StaticConfFiles.c_bloodshard_golem,
+			StaticConfFiles.c_entropic_decay,
+			StaticConfFiles.c_hailstone_golem,
+			StaticConfFiles.c_planar_scout,
+			StaticConfFiles.c_pyromancer,
+			StaticConfFiles.c_serpenti,
+			StaticConfFiles.c_rock_pulveriser,
+			StaticConfFiles.c_staff_of_ykir,
+			StaticConfFiles.c_windshrike,
+			StaticConfFiles.c_blaze_hound,
+			StaticConfFiles.c_bloodshard_golem,
+			StaticConfFiles.c_entropic_decay,
+			StaticConfFiles.c_hailstone_golem,
+			StaticConfFiles.c_planar_scout,
+			StaticConfFiles.c_pyromancer,
+			StaticConfFiles.c_serpenti,
+			StaticConfFiles.c_rock_pulveriser,
+			StaticConfFiles.c_staff_of_ykir,
+			StaticConfFiles.c_windshrike
+	));
+
+	public final static HashMap<String,String> cardToUnit = new HashMap<>();
+
 	// Deck 1 Units
 	public final static String u_comodo_charger = "conf/gameconfs/units/comodo_charger.json";
 	public final static String u_azure_herald = "conf/gameconfs/units/azure_herald.json";
@@ -41,7 +93,19 @@ public class StaticConfFiles {
 	public final static String u_ironcliff_guardian = "conf/gameconfs/units/ironcliff_guardian.json";
 	public final static String u_pureblade_enforcer = "conf/gameconfs/units/pureblade_enforcer.json";
 	public final static String u_silverguard_knight = "conf/gameconfs/units/silverguard_knight.json";
-	
+
+	static {
+
+		cardToUnit.put("azurite_lion",u_azurite_lion);
+		cardToUnit.put("comodo_charger",u_comodo_charger);
+		cardToUnit.put("azure_herald",u_azure_herald);
+		cardToUnit.put("fire_spitter",u_fire_spitter);
+		cardToUnit.put("hailstone_golem",u_hailstone_golem);
+		cardToUnit.put("ironcliff_guardian",u_ironcliff_guardian);
+		cardToUnit.put("pureblade_enforcer",u_pureblade_enforcer);
+		cardToUnit.put("silverguard_knight",u_silverguard_knight);
+	}
+
 	// Deck 2 Cards
 	public final static String c_staff_of_ykir = "conf/gameconfs/cards/2_c_s_staff_of_ykir.json";
 	public final static String c_entropic_decay = "conf/gameconfs/cards/2_c_s_entropic_decay.json";
@@ -62,7 +126,20 @@ public class StaticConfFiles {
 	public final static String u_rock_pulveriser = "conf/gameconfs/units/rock_pulveriser.json";
 	public final static String u_serpenti = "conf/gameconfs/units/serpenti.json";
 	public final static String u_windshrike = "conf/gameconfs/units/windshrike.json";
-	
+
+	static {
+		cardToUnit.put("humanAvatar",humanAvatar);
+		cardToUnit.put("aiAvatar",aiAvatar);
+		cardToUnit.put("blaze_hound",u_blaze_hound);
+		cardToUnit.put("bloodshard_golem",u_bloodshard_golem);
+		cardToUnit.put("hailstone_golemR",u_hailstone_golemR);
+		cardToUnit.put("planar_scout",u_planar_scout);
+		cardToUnit.put("pyromancer",u_pyromancer);
+		cardToUnit.put("rock_pulveriser",u_rock_pulveriser);
+		cardToUnit.put("serpenti",u_serpenti);
+		cardToUnit.put("windshrike",u_windshrike);
+	}
+
 	// Effects
 	public final static String f1_inmolation = "conf/gameconfs/effects/f1_inmolation.json";
 	public final static String f1_buff = "conf/gameconfs/effects/f1_buff.json";

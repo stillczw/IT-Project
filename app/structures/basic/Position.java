@@ -17,7 +17,12 @@ public class Position {
 	int tiley;
 	
 	public Position() {}
-	
+
+	public Position( int tilex, int tilexy) {
+		super();
+		this.tilex = tilex;
+		this.tiley = tilexy;
+	}
 	public Position(int xpos, int ypos, int tilex, int tilexy) {
 		super();
 		this.xpos = xpos;

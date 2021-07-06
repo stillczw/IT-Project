@@ -45,6 +45,22 @@ public class BasicCommands {
 			e.printStackTrace();
 		}
 	}
+
+	public static void setPlayerMana(ActorRef out,int id,Player player){
+		if(id==0){
+			setPlayer1Mana(out,player);
+		}else {
+			setPlayer2Mana(out, player);
+		}
+	}
+
+	public static void setPlayerHealth(ActorRef out,int id,Player player){
+		if(id==1){
+			setPlayer1Health(out,player);
+		}else {
+			setPlayer2Health(out, player);
+		}
+	}
 	
 	/**
 	 * drawUnit will draw the sprite for a unit (a picture of that unit with its attack and health values) on the board. 
@@ -133,7 +149,7 @@ public class BasicCommands {
 	 * which animation to switch to.
 	 * @param out
 	 * @param unit
-	 * @param animationToPlay
+	 * @param animation
 	 */
 	@SuppressWarnings({"deprecation"})
 	public static void playUnitAnimation(ActorRef out, Unit unit, UnitAnimationType animationToPlay) {
@@ -328,8 +344,7 @@ public class BasicCommands {
 	 * Plays a projectile fire animation between two tiles
 	 * @param out
 	 * @param effect
-	 * @param startTile
-	 * @param targetTile
+	 * @param tile
 	 */
 	@SuppressWarnings({"deprecation"})
 	public static void playProjectileAnimation(ActorRef out, EffectAnimation effect, int mode, Tile startTile, Tile targetTile) {

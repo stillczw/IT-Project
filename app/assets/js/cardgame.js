@@ -915,7 +915,7 @@ function play(){
 	
 	if (!gameStart) {
 		ws.send(JSON.stringify({
-    		messagetype: "initalize"
+    		messagetype: "initialize"
   		}));
         gameStart = true;
 

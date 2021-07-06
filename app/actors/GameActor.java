@@ -14,7 +14,7 @@ import events.CardClicked;
 import events.EndTurnClicked;
 import events.EventProcessor;
 import events.Heartbeat;
-import events.Initalize;
+import events.Initialize;
 import events.OtherClicked;
 import events.TileClicked;
 import events.UnitMoving;
@@ -53,7 +53,7 @@ public class GameActor extends AbstractActor {
 
 		// create class instances to respond to the various events that we might recieve
 		eventProcessors = new HashMap<String,EventProcessor>();
-		eventProcessors.put("initalize", new Initalize());
+		eventProcessors.put("initialize", new Initialize());
 		eventProcessors.put("heartbeat", new Heartbeat());
 		eventProcessors.put("unitMoving", new UnitMoving());
 		eventProcessors.put("unitstopped", new UnitStopped());
@@ -64,7 +64,6 @@ public class GameActor extends AbstractActor {
 		
 		// Initalize a new game state object
 		gameState = new GameState();
-		
 		// Get the list of image files to pre-load the UI with
 		Set<String> images = ImageListForPreLoad.getImageListForPreLoad();
 		
@@ -89,6 +88,7 @@ public class GameActor extends AbstractActor {
 					System.out.println(message);
 					processMessage(message.get("messagetype").asText(), message);
 				}).build();
+
 	}
 
 	/**

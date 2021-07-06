@@ -113,7 +113,12 @@ public class Tile {
 		return null;
 		
 	}
-	
-	
-	
+
+	@Override
+	public String toString() {
+		return "Tile{" +
+				"tilex=" + tilex +
+				", tiley=" + tiley +
+				'}';
+	}
 }

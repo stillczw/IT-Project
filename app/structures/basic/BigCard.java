@@ -1,5 +1,7 @@
 package structures.basic;
 
+import java.util.Arrays;
+
 /**
  * BigCard represents the expanded card version that that appears on mouse-over
  * @author Dr. Richard McCreadie
@@ -54,9 +56,13 @@ public class BigCard {
 		this.cardTextures = cardTextures;
 	}
 
-	
-	
-	
-	
-	
+	@Override
+	public String toString() {
+		return "BigCard{" +
+				"attack=" + attack +
+				", health=" + health +
+				", rulesTextRows=" + Arrays.toString(rulesTextRows) +
+				", cardTextures=" + Arrays.toString(cardTextures) +
+				'}';
+	}
 }
