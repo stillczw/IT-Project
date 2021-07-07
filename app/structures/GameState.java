@@ -14,8 +14,8 @@ import java.util.*;
 /**
  * This class can be used to hold information about the on-going game.
  * Its created with the GameActor.
- * 
- * @author Dr. Richard McCreadie
+ *
+ * @author Team_Koi Zhiwei CHEN, Qi XIAO, Minghui ZHAO, Ji ZHANG, Jiaying LIU
  *
  */
 public class GameState {
@@ -32,7 +32,7 @@ public class GameState {
 
 	public final static List<Position> nullList = new ArrayList<>();
 
-	// 当前执行动作的用户ID
+	// ID of current player
 	public int currentPlayerId = -1;
 
 	public ClickType clickType = ClickType.none;
@@ -66,7 +66,7 @@ public class GameState {
 	public void init(ActorRef out){
 		this.out = out;
 
-		// 初始化参数
+		// Initialization
 		// setPlayersHealth
 		Player humanPlayer = new Player(20, 0);
 		BasicCommands.setPlayer1Health(out, humanPlayer);
@@ -77,6 +77,7 @@ public class GameState {
 
 		players = new Player[]{humanPlayer, aiPlayer};
 
+		// todo 此处需要修改为抽3张卡
 		// 下一步是抽卡,游戏开始每个玩家都抽2卡  卡池来自
 		//	牌库初始化
 		Random random = new Random();
@@ -88,9 +89,9 @@ public class GameState {
 			deck2Cards.remove(index);
 		}
 
-//		aiSay(" ----------玩家初始回合牌库数量 : "+humanPlayer.getDeckQueue().size());
+//		aiSay(" ----------Number of cards in the player's deck : "+humanPlayer.getDeckQueue().size());
 
-		// 9x5 tile池
+		// 9x5 tiles
 		resetClickType();
 
 		Unit player1 = loadUnit("humanAvatar",player_id1,BasicObjectBuilders.loadTile(0, 2),true);
@@ -99,16 +100,17 @@ public class GameState {
 		playerAvatars = new Unit[]{player1,player2};
 
 		// 玩家抽卡
+		// todo 此处需要修改为回合结束后抽卡。
 		turnController();
 	}
 
 	public Unit loadUnit(String cardName,int playerId,Tile tile,boolean isPlayer){
 		int x = tile.getTilex();int y = tile.getTiley();
 
-		System.out.println("-- 放置卡片 ： "+cardName);
+		System.out.println("-- play card : "+cardName);
 		String config = StaticConfFiles.cardToUnit.get(cardName);
 		Unit unit = BasicObjectBuilders.loadUnit(config, id++, playerId, Unit.class);
-		System.out.println("从原有方法加载的unit参数  "+unit);
+		System.out.println("Unit  "+unit);
 		unit.setPositionByTile(tile);
 		units[x][y] = unit;
 		sleep(30);
@@ -177,7 +179,7 @@ public class GameState {
 	public void setUnit(Tile tile,Card card) {
 		// 计算法力消耗，法力不足无法出战
 		if(card.getManacost()>getCurrentPlayer().getMana()){
-			BasicCommands.addPlayer1Notification(out,"法力不足",1);
+			BasicCommands.addPlayer1Notification(out,"No sufficient mana",1);
 			return;
 		}else{
 			//法力足够直接扣除
@@ -197,24 +199,24 @@ public class GameState {
 		getCard(num,getCurrentPlayer());
 	}
 
-	public void getCard(int num,Player player) {
-		System.out.println(" ----------玩家新回合牌库数量 : "+getCurrentPlayer().getDeckQueue().size());
-		for (int pos = 1; pos <=num; pos++) {
+	public void getCard(int num, Player player) {
+		System.out.println(" ----------cards in deck from new turn : "+getCurrentPlayer().getDeckQueue().size());
+		for (int pos = 1; pos <= num; pos++) {
 			String newCard = player.getDeckQueue().poll();
 			if(newCard==null) {
-				System.out.println("无法抽卡，卡池中已经没有卡了！");
+				System.out.println("There is no card in the deck！");
 				return;
 			}
 			Card card = BasicObjectBuilders.loadCard(newCard, pos, Card.class);
 			if(player.getHandCards().size()>=6){
-				System.out.println("手牌无法放下更多(>=6)，新卡牌被废弃");
+				System.out.println("Your hand is full(>=6). The new card is discarded.");
 				continue;
 			}
 			player.getHandCards().add(card);
 		}
 		if(isUserRound()){
 			//用户回合，重绘制卡片
-			System.out.println("用户回合，绘制卡片");
+			System.out.println("Human player's turn, draw cards.");
 			drawCards();
 		}
 	}
@@ -230,8 +232,8 @@ public class GameState {
 	 * @param card 删除的卡
 	 */
 	private void removeCard(Card card){
-		for (int i = getCurrentPlayer().getHandCards().size(); i >0; i--) {
-			System.out.println("删除第"+i+"张卡的绘制");
+		for (int i = getCurrentPlayer().getHandCards().size(); i > 0; i--) {
+			System.out.println("Delete the " + i + " card from hand");
 			BasicCommands.deleteCard(out, i);
 		}
 		//hands更新
@@ -266,8 +268,8 @@ public class GameState {
 	 */
 	public void tileClicked(JsonNode message) {
 		if(end){
-			System.out.println("游戏已结束");
-			aiSay("游戏已结束");
+			System.out.println("Game over!");
+			aiSay("Game Over");
 			return;
 		}
 		int x = message.get("tilex").asInt();
@@ -291,18 +293,18 @@ public class GameState {
 				// 判断该瓷砖是否有仆从
 				if (units[x][y]!=null){
 					Unit unit = units[x][y];
-					System.out.println("瓷砖有[unit] "+unit);
+					System.out.println("This tile has [unit] "+unit);
 					//判断是否为当前玩家ID
 					if(unit.getPlayId()==currentPlayerId){
 						//  是否可行走,攻击
 						if(unit.actioned()){
 							// 绘制可行走路径、攻击路径
-							System.out.println("瓷砖上的[unit]是[可操作]的");
+							System.out.println("[unit] in this tile can be operated");
 							clickType = ClickType.unit;
 							setClickPosition(x*10+y);
 							unit.actionMark(this);
 						}else {
-							aiSay("Unit 不能行动");
+							aiSay("Unit cannot attack/move");
 						}
 					}
 				}
@@ -325,7 +327,7 @@ public class GameState {
 				}else if(tileTypes[x][y]==TileType.red){
 					// 攻击事件
 					attack(tile);
-					System.out.println("触发攻击事件");
+					System.out.println("Attack!");
 				}
 				break;
 			case tile:
@@ -336,7 +338,7 @@ public class GameState {
 
 	private void doEffect(Card card,Tile tile) {
 		if(card.getManacost()>getCurrentPlayer().getMana()){
-			aiSay("法力值不足以发动技能");
+			aiSay("No sufficient mana");
 			resetClickType();
 			return;
 		}
@@ -344,10 +346,10 @@ public class GameState {
 		int oy = tile.getTiley();
 		TileType tileType = tileTypes[ox][oy];
 		if(tileType==TileType.normal) {
-			System.out.println("点到了错误的砖块["+ox+","+oy+"]");
+			System.out.println("Unavailable tile clicked["+ox+","+oy+"]");
 		}
 		Unit unit = units[ox][oy];
-		System.out.println("执行技能牌 ： "+card.getCardname());
+		System.out.println("Play the Spell card ： "+card.getCardname());
 		switch (card.getCardname()){
 			case "Truestrike":
 				//  Deal 2 damage to an enemy unit
@@ -390,7 +392,7 @@ public class GameState {
 	private void attack(Tile tile) {
 		//合法值判断
 		if(clickPosition<1) {
-			System.out.println("非法攻击位置");
+			System.out.println("Illegal tile!");
 			return;
 		}
 		int x = clickPosition/10;
@@ -410,7 +412,7 @@ public class GameState {
 	 */
 	public void removeUnit(Unit unit){
 		sleep(30);
-		System.out.println("unit 死亡 , 触发死亡事件");
+		System.out.println("Unit dies.");
 		BasicCommands.playUnitAnimation(out,unit,UnitAnimationType.death);
 		units[unit.getPosition().getTilex()][unit.getPosition().getTiley()]=null;
 		sleep(1000);
@@ -421,7 +423,7 @@ public class GameState {
 
 	private void moveUnitToTile(Tile tile) {
 
-		//合法值判断
+		// judge the legality of tile
 		if(clickPosition<1) return;
 		int x = clickPosition/10;
 		int y = clickPosition%10;
@@ -449,7 +451,7 @@ public class GameState {
 	}
 
 	/**
-	 * 是否为玩家回合
+	 * Determine whether it is human player's turn
 	 */
 	boolean isUserRound(){
 		return currentPlayerId==player_id1;
@@ -457,22 +459,22 @@ public class GameState {
 
 	public void cardClicked(JsonNode message) {
 		if(end){
-			System.out.println("游戏已结束");
-			aiSay("游戏已结束");
+			System.out.println("Game is over");
+			aiSay("Game is over");
 			return;
 		}
 		if(!isUserRound()) return;
 		if(clickType == ClickType.card){
 			resetClickType();
-			BasicCommands.addPlayer1Notification(out,"取消卡选择",1);
+			BasicCommands.addPlayer1Notification(out,"Unselected",1);
 			return;
 		}
 		int handPosition = message.get("position").asInt();
-//		  放置卡牌
-		//判断卡牌类型 技能卡或人物卡
+//		Play the card
+//		Spell / Minion
 		var card = getCurrentPlayer().getHandCards().get(handPosition-1);
 		if(StaticConfFiles.cardToUnit.get(formatCardName(card.getCardname()))!=null){
-			// 是人物卡
+			// Minion
 			if (clickType != ClickType.card) {
 				resetClickType();
 				setClickType(ClickType.card);
@@ -507,7 +509,7 @@ public class GameState {
 				}
 			}
 		}else{
-			//  是技能卡
+			//  Spell
 			if (clickType != ClickType.effectCard) {
 				resetClickType();
 				setClickType(ClickType.effectCard);
@@ -522,7 +524,7 @@ public class GameState {
 
 	private List<Tile> clickEffectCard(Card card) {
 		List<Tile> tiles = new ArrayList<>();
-		BasicCommands.addPlayer1Notification(out,"选中了一个技能卡",1);
+		BasicCommands.addPlayer1Notification(out,"Spell card selected",1);
 		switch (card.getCardname()){
 			case "Truestrike":
 				//  Deal 2 damage to an enemy unit
@@ -574,23 +576,26 @@ public class GameState {
 	}
 
 	/**
-	 *  在该方法转换控制权
+	 *  turn the controller to the other player: AI --> human player; human player --> AI
 	 */
 	void turnController(){
-		// 清除状态
+		// reset the click type
 		resetClickType();
-		// 当前玩家标记轮转
+		// turn ID to the other player's
 		currentPlayerId = (currentPlayerId+1)%2;
-		//  固定玩家先走的情况下，轮到玩家 意味着 新回合开始 标记+1
+		// 固定玩家先走的情况下，轮到玩家 意味着 新回合开始 标记+1
+		// In this project, human player always take first turn.
+
 		if(currentPlayerId==0) {
 			currentRound+=1;
 		}
 		// 第一回合的特殊值
+		// special values for the 1st turn
 		if(currentRound==1)
 			getCard(3);
 		else getCard(1);
 
-		// 玩家场上单元回合初始化
+		// Initialize units belonging to the current player
 		for (Unit[] unitArr : units) {
 			for (Unit unit : unitArr) {
 				if(unit!=null)
@@ -618,14 +623,14 @@ public class GameState {
 		resetClickType();
 	}
 
-	//在这里执行 AI 逻辑
+	// AI's Logic
 	private void AiMethod() {
 		Player player = players[1];
 		// 首先处理手牌   对于人物牌，没有选择倾向，从第一张牌开始释放
 		var hands = player.getHandCards();
 		int index = 0;
 
-		aiSay("AI出牌阶段开始");
+		aiSay("AI's turn :)");
 		while (player.getMana()>0 && hands.size()>0 && hands.size()>index){
 
 
@@ -635,8 +640,8 @@ public class GameState {
 				index++;
 			}else{
 				if(StaticConfFiles.cardToUnit.get(card.getFormatName())==null){
-					// 技能牌操作
-					aiSay("展示技能牌范围 index -> "+index+" cardName -> "+card.getFormatName());
+					// Spell cards
+					aiSay("Show the tiles can be affected: index -> "+index+" cardName -> "+card.getFormatName());
 					List<Tile> tiles = clickEffectCard(card);
 					sleep(1000);
 					if(tiles.size()>0){
@@ -644,27 +649,30 @@ public class GameState {
 						sleep(200);
 					}
 					else {
-						aiSay("该技能无法作用，跳过");
+						aiSay("This Spell card cannot be played. Skip.");
 						index++;
 					}
 				}else{
 					// 考虑出卡位置，倾向于由左到右,由上至下放置;
+					// play Minion cards; left-right, top-down
 					out:for (int x = 6; x < 9; x++) {
 						for (int y = 0; y < 5; y++) {
 							if(units[x][y]==null){
-								aiSay("卡牌出战 ["+x+","+y+"]");
+								aiSay("Play the minion card ["+x+","+y+"]");
 								setUnit(BasicObjectBuilders.loadTile(x, y),card);
 								break out;
 							}
 						}
 					}
 					// 如果可放置位置已满，跳过手牌释放
+					// if there is no tile available, skip playing cards
 					break;
 				}
 			}
 		}
-		aiSay("AI出牌阶段结束，战斗阶段开始");
+		aiSay("AI placement finished. Start battlement.");
 		//  按轮次检索所属单位，并依次控制。 检索倾向为，从左到右，从上到下
+		// traverse all units, determine whether the playId equals to currentPlayerId
 		for (Unit[] us : units) {
 			for (Unit u : us) {
 				if(u!=null)
@@ -683,6 +691,7 @@ public class GameState {
 						}
 						else if(runList.size()>1 && !attacked){
 							//todo 此处应该向最进的可攻击对象靠近
+							// move to the nearest opponent
 							u.run(this,BasicObjectBuilders.loadTile(
 									runList.get(0).getTilex(),
 									runList.get(0).getTiley()
@@ -695,27 +704,27 @@ public class GameState {
 				}
 			}
 		}
-		aiSay("AI回合结束");
-		// AI回合结束，轮转到玩家
+		aiSay("AI's turn ends. Human player's turn :D");
+		// Turn to human player
 		endTurnClicked();
 	}
 
 
 	/**
-	 * 在该方法结束当前回合并处理相关操作
+	 * After user clicks the end-turn button, draw a card from the deck
 	 */
 	public void endTurnClicked() {
 		if(end){
-			System.out.println("游戏已结束");
-			aiSay("游戏已结束");
+			System.out.println("Game is over");
+			aiSay("Game is Over");
 			return;
 		}
 		var cPlayer = getCurrentPlayer();
 		// 回合结束前法力归零
 		cPlayer.setMana(0);
 		//  如果玩家场上已无卡，意味着游戏结束，游戏失败
-		int num = 0;
-		int num2 = 0;
+//		int num = 0;
+//		int num2 = 0;
 //		for (int x = 0; x < 9; x++) {
 //			for (int y = 0; y < 5; y++) {
 //				if(units[x][y]!=null){
@@ -751,14 +760,14 @@ public class GameState {
 	}
 
 	/**
-	 *  游戏结束逻辑
+	 *  End of one game
 	 */
 	public void gameEnd(int loser) {
-		aiSay("游戏结束");
+		aiSay("Game is over");
 		end = true;
 		if(loser==1)
-			BasicCommands.addPlayer1Notification(out," I'm winner",2000);
+			BasicCommands.addPlayer1Notification(out," I'm the winner",2000);
 		else
-			BasicCommands.addPlayer1Notification(out," I'm loser",2000);
+			BasicCommands.addPlayer1Notification(out," Victory belongs to you",2000);
 	}
 }

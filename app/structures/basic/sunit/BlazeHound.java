@@ -3,15 +3,13 @@ import structures.GameState;
 import structures.basic.Unit;
 
 /**
- * When this unit is
- * summoned, both
- * players draw a card
+ * • When this unit is summoned, each player draws 1 card
  */
 public class BlazeHound extends Unit  {
 
     @Override
     public void whenCreate(GameState gameState) {
-        // 摸卡
+        // draw card from the deck
         gameState.getCard(1,gameState.players[0]);
         gameState.getCard(1,gameState.players[1]);
     }

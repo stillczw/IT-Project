@@ -7,9 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Ranged: Can attack
- * any enemy on the
- * board
+ * Ranged:
+ * Can attack any enemy on the board
  */
 public class FireSpitter extends Unit{
 

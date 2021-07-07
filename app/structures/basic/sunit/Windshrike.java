@@ -7,12 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Flying: Can move
- * anywhere on the
- * board
- * • When this unit dies,
- * its owner draws a
- * card
+ * • When this unit dies, its owner draws a card
+ * Flying:
+ * Can move anywhere on the board
  */
 public class Windshrike extends Unit{
 
@@ -22,7 +19,7 @@ public class Windshrike extends Unit{
         for (int x = 0; x < 9; x++) {
             for (int y = 0; y < 5; y++) {
                 judgePath(x,y,gameState,true);
-                System.out.println("我的攻击方法被增强了,我可以攻击到任何地方");
+                System.out.println("I can move anywhere on the board");
                 var position = judgePath(x,y,gameState,true);
                 if (position!=null) positions.add(position);
             }
@@ -32,7 +29,7 @@ public class Windshrike extends Unit{
 
     @Override
     public void whenDeath(GameState gameState) {
-        //todo 抽卡
+        // draw card from the deck
         gameState.getCard(1);
     }
 }

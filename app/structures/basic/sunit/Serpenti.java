@@ -3,10 +3,11 @@ import structures.GameState;
 import structures.basic.Unit;
 
 /**
- * Can attack twice per
- * turn
+ * Windfury:
+ * Attack twice per turn
  */
 public class Serpenti extends Unit{
+
     @Override
     public void init(){
         runCount = 1;

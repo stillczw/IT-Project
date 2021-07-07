@@ -4,15 +4,10 @@ import structures.basic.Card;
 import structures.basic.Unit;
 
 /**
- * Provoke: If an enemy
- * unit can attack and is
- * adjacent to any unit
- * with provoke, then it
- * can only choose to
- * attack the provoke
- * units. Enemy units
- * cannot move when
- * provoked.
+ * Provoke:
+ * If an enemy unit can attack and is adjacent to any unit
+ * with provoke, then it can only choose to attack the provoke units.
+ * Enemy units cannot move when provoked
  */
 public class RockPulveriser extends Unit{
 

@@ -4,18 +4,11 @@ import structures.basic.Card;
 import structures.basic.Unit;
 
 /**
- * Can be summoned
- * anywhere on the board
- * • Provoke: If an enemy
- * unit can attack and is
- * adjacent to any unit
- * with provoke, then it can
- * only choose to attack
- * the provoke units. Enemy
- * units cannot move when
- * provoked
- *
- * 挑衅施法者
+ * • Can be summoned anywhere on the board
+ * Provoke:
+ * If an enemy unit can attack and is adjacent to any unit
+ * with provoke, then it can only choose to attack the provoke units.
+ * Enemy units cannot move when provoked
  */
 public class IroncliffGuardian extends Unit{
 

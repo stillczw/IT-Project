@@ -80,14 +80,14 @@ public class Unit implements SkillListenable{
 	public void actionMark(GameState gameState){
 		int tx = getPosition().getTilex();
 		int ty = getPosition().getTiley();
-		System.out.println("判断 "+tx+","+ty+" 上点的可行路径");
+		System.out.println("determine "+tx+","+ty+" path");
 		attackFind(gameState);
 		runFind(gameState);
 	}
 	private Unit isProvoked(GameState gameState){
 		int tx = getPosition().getTilex();
 		int ty = getPosition().getTiley();
-		System.out.println("判断 "+tx+","+ty+" 上点的可行路径");
+		System.out.println("determine "+tx+","+ty+" path");
 
 		int[][] ps = { {tx-1,ty},{tx+1,ty},{tx,ty-1},{tx,ty+1}, };
 		for (int[] p : ps) {
@@ -119,7 +119,7 @@ public class Unit implements SkillListenable{
 
 	public List<Position> attackFind(GameState gameState){
 		if(!canAttack()) {
-			gameState.aiSay("该单元不能攻击");
+			gameState.aiSay("This unit cannot attack!");
 			return GameState.nullList;
 		}
 		var unit = isProvoked(gameState);
@@ -169,7 +169,7 @@ public class Unit implements SkillListenable{
 	}
 	protected Position judgePath(int tx,int ty,GameState gameState,boolean runMethod){
 		if(tx<0||tx>8||ty<0||ty>4) {
-			System.out.println(tx+","+ty+" 不可行");
+			System.out.println(tx+","+ty+" unavailable");
 			return null;
 		}
 		else {
@@ -194,7 +194,7 @@ public class Unit implements SkillListenable{
 		for (int[] p : pos) {
 			int tx = p[0]; int ty = p[1];
 			if(tx<0||tx>8||ty<0||ty>4) {
-				System.out.println(tx+","+ty+" 不可行");
+				System.out.println(tx+","+ty+" unavailable");
 				break;
 			}else {
 				Tile tile = BasicObjectBuilders.loadTile(tx, ty);
@@ -358,8 +358,8 @@ public class Unit implements SkillListenable{
 		position = new Position(tile.getXpos(),tile.getYpos(),tile.getTilex(),tile.getTiley());
 	}
 
-	public int attack(GameState gameState,Unit unit){
-		System.out.println("unit发动攻击，攻击力为 "+ attack);
+	public int attack(GameState gameState, Unit unit){
+		System.out.println("Unit attacks with "+ attack);
 		//绘画事件发布
 		gameState.resetClickType();
 		BasicCommands.playUnitAnimation(gameState.out,this,UnitAnimationType.attack);
@@ -370,8 +370,8 @@ public class Unit implements SkillListenable{
 		return health;
 	}
 
-	public int hit(GameState gameState,int v){
-		System.out.println("unit受到伤害，原血量"+health+"攻击力为"+v+" 剩余血量 "+ (this.health-v));
+	public int hit(GameState gameState, int v){
+		System.out.println("Unit with "+health+" health is attacked by "+v+", remaining "+ (this.health-v));
 		this.health=this.health-v;
 		BasicCommands.playUnitAnimation(gameState.out,this,UnitAnimationType.hit);
 		gameState.sleep(100);

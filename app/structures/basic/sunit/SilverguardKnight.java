@@ -4,17 +4,11 @@ import structures.basic.Card;
 import structures.basic.Unit;
 
 /**
- * Provoke: If an enemy
- * unit can attack and is
- * adjacent to any unit
- * with provoke, then it can
- * only choose to attack
- * the provoke units. Enemy
- * units cannot move when
- * provoked.
- * • If your avatar is dealt
- * damage this unit gains
- * +2 attack
+ * • Every time your avatar is dealt damage, this unit gains +2 attack
+ * Provoke:
+ * If an enemy unit can attack and is adjacent to any unit
+ * with provoke, then it can only choose to attack the provoke units.
+ * Enemy units cannot move when provoked
  */
 public class SilverguardKnight extends Unit{
 
